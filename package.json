@@ -1,0 +1,24 @@
+{
+  "name": "kube",
+  "version": "1.0.0",
+  "description": "Prerequisites 1. Digitalocean account to create kubernetes envoronment and for deployment 2. Github account for running actions 3. Docker on the system,",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --poll ./app.ts",
+    "build": "tsc",
+    "start": "npm run build && node built/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  }
+}
