@@ -1,0 +1,29 @@
+name: deploy-to-kubernetes-on-digitalocean # Name of the GitHub Actions workflow
+
+on:
+  push:
+    branches: [ "main" ] # Trigger the workflow on push events to the main branch
+  pull_request:
+    branches: [ "main" ] # Trigger the workflow on pull requests targeting the main branch
+
+env:
+  IMAGE_NAME: prkagrawal/node-api # image name
+  IMAGE_TAG: ${{ github.sha }} # get the commit SHA from the GitHub context (useful for tagging the Docker image because it's unique)
+
+jobs:
+
+  build: # Define a job named 'build'
+
+    runs-on: ubuntu-latest # Specify the runner to use for the job, here it's the latest version of Ubuntu
+
+    steps:
+    - uses: actions/checkout@v4 # Step to check out the repository code using the checkout action
+
+    - name: Build the Docker image # Step name
+      run: docker build -t "$IMAGE_NAME:$IMAGE_TAG" . # build the Docker image using envs defined above
+
+    # login to dockerhub then push the image to the dockerhub repo
+    - name: Push Docker image
+      run: |-
+        echo ${{secrets.DOCKERHUB_PASS}} | docker login -u ${{secrets.DOCKERHUB_USERNAME}} --password-stdin
+        docker push "$IMAGE_NAME:$IMAGE_TAG"
