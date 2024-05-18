@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-api
+  namespace: default
+  labels:
+    app: node-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-api
+  template:
+    metadata:
+      labels:
+        app: node-api
+    spec:
+      containers:
+        - name: container-name
+          image: prkagrawal/tag-val
+          ports:
+            - containerPort: 4000

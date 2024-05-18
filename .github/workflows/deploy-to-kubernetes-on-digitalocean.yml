@@ -27,3 +27,26 @@ jobs:
       run: |-
         echo ${{secrets.DOCKERHUB_PASS}} | docker login -u ${{secrets.DOCKERHUB_USERNAME}} --password-stdin
         docker push "$IMAGE_NAME:$IMAGE_TAG"
+
+    - name: Install envsubst
+      run: |-
+        sudo apt-get update && sudo apt-get -y install gettext-base
+
+    - name: Install kubectl
+      run: |-
+        curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        chmod u+x ./kubectl
+
+    - name: Substitute variables in deployment.yaml by running script
+      run: |-
+        ./scripts/update-tag.sh "$IMAGE_TAG"
+
+    - name: Deploy to Kubernetes
+      run: |-
+        echo ${{secrets.KUBERNETES_CLUSTER_CERTIFICATE}} | base64 --decode > cert.crt
+        ./kubectl \
+          --kubeconfig=/dev/null \
+          --server=${{secrets.KUBERNETES_SERVER}} \
+          --certificate-authority=cert.crt \
+          --token=${{secrets.KUBERNETES_TOKEN}} \
+          apply -f ./k8s/
