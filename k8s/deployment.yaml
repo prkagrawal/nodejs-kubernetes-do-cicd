@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: container-name
-          image: prkagrawal/tag-val
+          image: prkagrawal/$COMMIT_SHA1
           ports:
             - containerPort: 4000
